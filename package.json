@@ -1,5 +1,5 @@
 {
-  "name": "@lab80/storybook-designer",
+  "name": "storybook-designer",
   "version": "0.1.0",
   "description": "Storybook addon for design previews.",
   "repository": {

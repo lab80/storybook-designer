@@ -21,7 +21,7 @@ cd storybook-designer
 npm link
 
 cd /path/to/project
-npm link @lab80/storybook-designer
+npm link storybook-designer
 npm install
 ```
 
@@ -35,6 +35,6 @@ cd storybook-designer
 npm unlink
 
 cd /path/to/project
-npm unlink @lab80/storybook-designer
+npm unlink storybook-designer
 npm install
 ```
