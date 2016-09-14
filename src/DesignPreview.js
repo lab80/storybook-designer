@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Box } from 'reflexbox';
+import { NODESIGN_BASE64 } from './icons'
 
 const { localStorage } = window;
 
@@ -45,6 +46,7 @@ class DesignPreview extends React.Component {
     this.state = { type };
 
     this.calculateScale = this.calculateScale.bind(this);
+    this.handlePreviewError = this.handlePreviewError.bind(this)
   }
 
   tryCalculateScale() {
@@ -131,6 +133,12 @@ class DesignPreview extends React.Component {
     );
   }
 
+  handlePreviewError(evt) {
+    evt.target.src = `data:image/svg+xml;base64,${NODESIGN_BASE64}`
+    //this._design.style.width = `${this._comp.offsetWidth}px`
+    //this._design.style.height = `${this._comp.offsetHeight}px`
+  }
+
   renderDesign(options = {}) {
     const { scaleImage = true } = options;
     const { design } = this.props;
@@ -143,7 +151,7 @@ class DesignPreview extends React.Component {
       <div>
         <div style={styles.container}>
           {design
-            ? <img ref={(c) => this._design = c} style={designStyle} src={design} />
+            ? <img ref={(c) => this._design = c} style={designStyle} src={design} onError={this.handlePreviewError} />
             : <div ref={(c) => this._design = c} style={designStyle}>No design</div>
           }
         </div>
