@@ -44,7 +44,6 @@ const styles = {
 class DesignPreview extends React.Component {
   constructor(...args) {
     super(...args)
-    console.log(...args)
 
     let type = localStorage.getItem('WITH_DESIGN_TYPE') || 'COMPARE'
     type = location.hash === '#PURE_IMPLEMENTATION' ? 'PURE_IMPLEMENTATION' : type
