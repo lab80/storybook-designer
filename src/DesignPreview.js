@@ -1,8 +1,9 @@
-import React from 'react';
-import { Flex, Box } from 'reflexbox';
+import React from 'react'
+import { Flex, Box } from 'reflexbox'
 import { NODESIGN_BASE64 } from './icons'
+import Preview from './Preview'
 
-const { localStorage } = window;
+const { localStorage } = window
 
 const styles = {
   toolbar: {
@@ -20,6 +21,7 @@ const styles = {
     outline: 0,
     letterSpacing: 0.5,
     WebkitFontSmoothing: 'antialiased',
+    color: '#4D4D4D',
   },
 
   wrapper: {
@@ -27,25 +29,29 @@ const styles = {
   },
 
   heading: {
-    fontFamily: "monospace",
-    textTransform: "uppercase",
+    fontFamily: 'monospace',
+    textTransform: 'uppercase',
     fontSize: 20,
-    margin: "10px 0",
-    padding: "0",
+    margin: '10px 0',
+    padding: '0',
   },
 
   container: {
     border: '1px dashed #DDD',
-  }
-};
+  },
+}
 
 class DesignPreview extends React.Component {
   constructor(...args) {
-    super(...args);
-    const type = localStorage.getItem('WITH_DESIGN_TYPE') || 'COMPARE';
-    this.state = { type };
+    super(...args)
+    console.log(...args)
 
-    this.calculateScale = this.calculateScale.bind(this);
+    let type = localStorage.getItem('WITH_DESIGN_TYPE') || 'COMPARE'
+    type = location.hash === '#PURE_IMPLEMENTATION' ? 'PURE_IMPLEMENTATION' : type
+
+    this.state = { type }
+
+    this.calculateScale = this.calculateScale.bind(this)
     this.handlePreviewError = this.handlePreviewError.bind(this)
   }
 
@@ -54,9 +60,9 @@ class DesignPreview extends React.Component {
       // Sometimes, this code may after this instance is unmounted.
       // Specially when navigating between stories quickly.
       // So, we need to handle it.
-      if (this.unmounted) return;
-      this.calculateScale();
-    };
+      if (this.unmounted) return
+      this.calculateScale()
+    }
 
     // This is some bad code where we are trying to do the scale based on
     // some data from the actutal DOM.
@@ -64,45 +70,45 @@ class DesignPreview extends React.Component {
     // complete it's rendering.
     // So, to do that, we need to run this logic in muliple times.
     // It's ugly. But safe and working.
-    calculate();
-    setTimeout(calculate, 0);
-    setTimeout(calculate, 50);
-    setTimeout(calculate, 100);
-    setTimeout(calculate, 200);
-    setTimeout(calculate, 500);
+    calculate()
+    setTimeout(calculate, 0)
+    setTimeout(calculate, 50)
+    setTimeout(calculate, 100)
+    setTimeout(calculate, 200)
+    setTimeout(calculate, 500)
   }
 
   calculateScale() {
-    const designImage = this._design;
+    const designImage = this._design
     if (!designImage) {
-      this.setState({ implementationScale: 1 });
-      return;
+      this.setState({ implementationScale: 1 })
+      return
     }
 
-    const implementationScale = designImage.width / designImage.naturalWidth;
-    this.setState({ implementationScale });
+    const implementationScale = designImage.width / designImage.naturalWidth
+    this.setState({ implementationScale })
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.calculateScale);
-    this.tryCalculateScale();
+    window.addEventListener('resize', this.calculateScale)
+    this.tryCalculateScale()
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.calculateScale);
-    this.unmounted = true;
+    window.removeEventListener('resize', this.calculateScale)
+    this.unmounted = true
   }
 
   renderToolbar() {
-    const { type: currentType } = this.state;
+    const { type: currentType } = this.state
 
     const changeState = (type) => {
       return () => {
-        localStorage.setItem('WITH_DESIGN_TYPE', type);
-        this.setState({ type });
-        this.tryCalculateScale();
-      };
-    };
+        localStorage.setItem('WITH_DESIGN_TYPE', type)
+        this.setState({ type })
+        this.tryCalculateScale()
+      }
+    }
 
     const buttons = [
       ['Side by Side', 'COMPARE'],
@@ -112,8 +118,8 @@ class DesignPreview extends React.Component {
     ].map(([caption, typeName]) => {
       const style = {
         ...styles.toolbarButton,
-        fontWeight: currentType === typeName? 600 : 400,
-      };
+        fontWeight: currentType === typeName ? 600 : 400,
+      }
 
       return (
         <button
@@ -123,28 +129,28 @@ class DesignPreview extends React.Component {
         >
           {caption}
         </button>
-      );
-    });
+      )
+    })
 
     return (
       <div style={styles.toolbar}>
         {buttons}
       </div>
-    );
+    )
   }
 
   handlePreviewError(evt) {
     evt.target.src = `data:image/svg+xml;base64,${NODESIGN_BASE64}`
-    //this._design.style.width = `${this._comp.offsetWidth}px`
-    //this._design.style.height = `${this._comp.offsetHeight}px`
+    // this._design.style.width = `${this._comp.offsetWidth}px`
+    // this._design.style.height = `${this._comp.offsetHeight}px`
   }
 
   renderDesign(options = {}) {
-    const { scaleImage = true } = options;
-    const { design } = this.props;
-    const designStyle = {};
+    const { scaleImage = true } = options
+    const { design } = this.props
+    const designStyle = {}
     if (scaleImage) {
-      designStyle.width = '100%';
+      designStyle.width = '100%'
     }
 
     return (
@@ -156,17 +162,17 @@ class DesignPreview extends React.Component {
           }
         </div>
       </div>
-    );
+    )
   }
 
   renderImplementation() {
-    const { implementation } = this.props;
-    const { implementationScale = 1 } = this.state;
+    const { implementation } = this.props
+    const { implementationScale = 1 } = this.state
 
     const containerStyle = {
       ...styles.container,
       zoom: implementationScale,
-    };
+    }
 
     return (
       <div>
@@ -174,20 +180,22 @@ class DesignPreview extends React.Component {
           {implementation}
         </div>
       </div>
-    );
+    )
   }
 
   render() {
-    const { type } = this.state;
+    const { type } = this.state
+
+    console.log(location.search)
 
     switch (type) {
       case 'SHOW_DESIGN':
         return (
           <div style={styles.wrapper} >
             {this.renderToolbar()}
-            {this.renderDesign({scaleImage: false})}
+            {this.renderDesign({ scaleImage: false })}
           </div>
-        );
+        )
 
       case 'SHOW_IMPLEMENTATION':
         return (
@@ -195,7 +203,10 @@ class DesignPreview extends React.Component {
             {this.renderToolbar()}
             {this.renderImplementation()}
           </div>
-        );
+        )
+
+      case 'PURE_IMPLEMENTATION':
+        return this.renderImplementation()
 
       case 'COMPARE':
         return (
@@ -203,10 +214,12 @@ class DesignPreview extends React.Component {
             {this.renderToolbar()}
             <Flex>
               <Box col={6}>{this.renderDesign()}</Box>
-              <Box col={6}>{this.renderImplementation()}</Box>
+              <Box col={6}>
+                <Preview url={`${location.pathname}${location.search}#PURE_IMPLEMENTATION`} />
+              </Box>
             </Flex>
           </div>
-        );
+        )
 
       case 'SHOW_BOTH':
       default:
@@ -216,7 +229,7 @@ class DesignPreview extends React.Component {
             {this.renderDesign()}
             {this.renderImplementation()}
           </div>
-        );
+        )
     }
   }
 }
