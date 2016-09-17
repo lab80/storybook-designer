@@ -185,8 +185,6 @@ class DesignPreview extends React.Component {
   render() {
     const { type } = this.state
 
-    console.log(location.search)
-
     switch (type) {
       case 'SHOW_DESIGN':
         return (
